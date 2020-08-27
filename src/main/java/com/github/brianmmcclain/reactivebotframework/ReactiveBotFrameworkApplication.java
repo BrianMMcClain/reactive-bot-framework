@@ -16,6 +16,6 @@ public class ReactiveBotFrameworkApplication {
 		TwitchBot bot = new TwitchBot();
 		bot.authorize(oauth, nick);
 		bot.joinChannel(channel);
-		bot.sendMessage("Hello!!");
+		//bot.sendMessage("Hello!!");
 	}
 }

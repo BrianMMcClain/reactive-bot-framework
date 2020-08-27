@@ -67,12 +67,15 @@ public class TwitchBot {
     }
 
     private void processMessage(String message) {
-        System.out.println(message);
         if (message.contains("Welcome, GLHF!")) {
             this.isAuthenticated = true;
             
         } else if (message.startsWith("PING")) {
+            System.out.print("Responding to PING: . . . ");
             sendMessage(message.replace("PING", "PONG"));
+            System.out.println("done!");
+        } else {
+            System.out.println("RCV: " + message);
         }
     }
 }

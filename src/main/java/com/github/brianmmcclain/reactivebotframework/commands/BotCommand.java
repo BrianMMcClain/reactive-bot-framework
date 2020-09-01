@@ -7,7 +7,7 @@ public abstract class BotCommand {
     public BotCommand() {
     }
 
-    public String execute(String command, String data, TwitchMessage tMessage) {
+    public String execute(String data, TwitchMessage tMessage) {
         return "Method Not Implimented";
     }
 }

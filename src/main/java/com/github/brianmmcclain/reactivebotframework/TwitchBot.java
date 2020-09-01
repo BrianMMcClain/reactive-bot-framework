@@ -102,7 +102,7 @@ public class TwitchBot {
 
         if (this.commandRegistry.keySet().contains(command)) {
             BotCommand botCommand = this.commandRegistry.get(command);
-            String retMessage = botCommand.execute(command, data, tMessage);
+            String retMessage = botCommand.execute(data, tMessage);
             this.sendMessage(retMessage);
         }
 

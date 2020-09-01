@@ -21,5 +21,6 @@ public class ReactiveBotFrameworkApplication {
 
 		// Register commands
 		bot.registerCommand("echo", new Echo());
+		bot.registerCommand("counter", new Counter());
 	}
 }

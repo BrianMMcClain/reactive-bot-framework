@@ -2,12 +2,12 @@ package com.github.brianmmcclain.reactivebotframework;
 
 public class Echo extends BotCommand {
 
-    public Echo(String command, String data, TwitchMessage tMessage) {
-        super(command, data, tMessage);
+    public Echo() {
+        super();
     }
     
     @Override
-    public String execute() {
+    public String execute(String command, String data, TwitchMessage tMessage) {
         return "@" + tMessage.getSentBy() + " " + data;
     }
 }

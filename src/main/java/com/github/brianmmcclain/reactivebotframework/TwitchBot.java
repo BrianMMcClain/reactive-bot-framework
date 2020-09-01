@@ -1,6 +1,5 @@
 package com.github.brianmmcclain.reactivebotframework;
 
-import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,13 +11,13 @@ public class TwitchBot {
     private boolean isAuthenticated = false;
     private String channel;
 
-    private Map<String, Class> commandRegistry;
+    private Map<String, BotCommand> commandRegistry;
 
     public TwitchBot() {
         this.connection = new IRCConnection("irc.chat.twitch.tv", 6667);
         this.connection.connect();
 
-        this.commandRegistry = new HashMap<String, Class>();
+        this.commandRegistry = new HashMap<String, BotCommand>();
     }
 
     public TwitchBot(String host, int port) {
@@ -26,8 +25,8 @@ public class TwitchBot {
         this.connection.connect();
     }
 
-    public void registerCommand(String command, Class commandClass) {
-        this.commandRegistry.put(command, commandClass);
+    public void registerCommand(String command, BotCommand botCommand) {
+        this.commandRegistry.put(command, botCommand);
     }
 
     public boolean isConnected() {
@@ -52,7 +51,7 @@ public class TwitchBot {
     }
 
     public void sendMessage(String message) {
-        System.out.println("SENDING: \"" + message + "\"");
+        //System.out.println("SENDING: \"" + message + "\"");
         this.connection.send("PRIVMSG #" + this.channel + " :" + message);
     }
 
@@ -100,15 +99,11 @@ public class TwitchBot {
         String data = tMessage.getMessage().replace("!" + command, "").trim();
 
         if (this.commandRegistry.keySet().contains(command)) {
-            try {
-                Constructor con = this.commandRegistry.get(command).getConstructors()[0];
-                BotCommand botCommand = (BotCommand) con.newInstance(command, data, tMessage);
-                String retMessage = botCommand.execute();
-                this.sendMessage(retMessage);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            BotCommand botCommand = this.commandRegistry.get(command);
+            String retMessage = botCommand.execute(command, data, tMessage);
+            this.sendMessage(retMessage);
         }
 
+        // TODO: Command not found
     }
 }

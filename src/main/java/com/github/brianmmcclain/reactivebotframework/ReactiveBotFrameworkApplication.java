@@ -18,6 +18,6 @@ public class ReactiveBotFrameworkApplication {
 		bot.joinChannel(channel);
 
 		// Register commands
-		bot.registerCommand("echo", Echo.class);
+		bot.registerCommand("echo", new Echo());
 	}
 }

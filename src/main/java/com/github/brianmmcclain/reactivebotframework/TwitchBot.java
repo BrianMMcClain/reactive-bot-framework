@@ -75,7 +75,8 @@ public class TwitchBot {
             sendMessage(message.replace("PING", "PONG"));
             System.out.println("done!");
         } else {
-            System.out.println("RCV: " + message);
+            TwitchMessage tMessage = new TwitchMessage(message);
+            System.out.println(tMessage.getSentBy() + ": " + tMessage.getMessage());
         }
     }
 }

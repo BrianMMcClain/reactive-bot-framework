@@ -3,6 +3,8 @@ package com.github.brianmmcclain.reactivebotframework;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.github.brianmmcclain.reactivebotframework.commands.*;
+
 import reactor.core.scheduler.Schedulers;
 
 public class TwitchBot {

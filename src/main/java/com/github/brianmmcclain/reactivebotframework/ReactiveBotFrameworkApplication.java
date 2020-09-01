@@ -1,5 +1,7 @@
 package com.github.brianmmcclain.reactivebotframework;
 
+import com.github.brianmmcclain.reactivebotframework.commands.*;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

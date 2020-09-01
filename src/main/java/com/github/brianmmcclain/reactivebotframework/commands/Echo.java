@@ -1,4 +1,6 @@
-package com.github.brianmmcclain.reactivebotframework;
+package com.github.brianmmcclain.reactivebotframework.commands;
+
+import com.github.brianmmcclain.reactivebotframework.TwitchMessage;
 
 public class Echo extends BotCommand {
 

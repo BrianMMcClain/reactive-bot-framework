@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: reactive-bot-framework
+  labels:
+    app: reactive-bot-framework
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: reactive-bot-framework
+  template:
+    metadata:
+      labels:
+        app: reactive-bot-framework
+    spec:
+      containers:
+      - name: reactive-bot-framework
+        image: brianmmcclain/reactive-bot-framework:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+        env:
+        - name: TWITCH_CHANNEL
+          value: REPLACE_ME
+        - name: TWITCH_OAUTH
+          valueFrom:
+            secretKeyRef:
+              name: twitch-auth
+              key: twitch-oauth
+        - name: TWITCH_NICK
+          valueFrom:
+            secretKeyRef:
+              name: twitch-auth
+              key: twitch-nick
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: reactive-bot-framework-service
+  labels:
+    app: reactive-bot-framework
+spec:
+  selector:
+    app: reactive-bot-framework
+  ports:
+    - protocol: TCP
+      name: http-traffic
+      port: 8080
+      targetPort: 8080
+
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: reactive-bot-framework-service-monitor
+spec:
+  selector:
+    matchLabels:
+      app: reactive-bot-framework
+  endpoints:
+  - port: http-traffic
+    path: "/actuator/prometheus"

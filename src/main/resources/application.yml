@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: reactive-bot-framework
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, metrics, info, prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}

@@ -20,6 +20,9 @@ public class TwitchBot {
         this.connection.connect();
 
         this.commandRegistry = new HashMap<String, BotCommand>();
+
+        // Enable metrics for schedulers
+        Schedulers.enableMetrics();
     }
 
     public TwitchBot(String host, int port) {
@@ -42,7 +45,8 @@ public class TwitchBot {
     public void authorize(String oauth, String nick) {
         this.connection.send("PASS " + oauth);
         this.connection.send("NICK " + nick);
-        this.connection.getInputStream().subscribeOn(Schedulers.parallel()).subscribe(message -> {
+
+        this.connection.getInputStream().metrics().subscribeOn(Schedulers.parallel()).subscribe(message -> {
             processMessage(message);
         });
     }
@@ -82,7 +86,7 @@ public class TwitchBot {
             this.isAuthenticated = true;
 
         } else if (message.startsWith("PING")) {
-            System.out.print("Responding to PING: . . . ");
+            System.out.println("Responding to PING: . . . ");
             sendMessage(message.replace("PING", "PONG"));
             System.out.println("done!");
         } else {

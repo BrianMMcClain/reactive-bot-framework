@@ -24,6 +24,11 @@ public class IRCConnection {
         this.port = port;
     }
 
+    /**
+     * Connect to the IRC server and create a Flux to stream messages to
+     * any subscribers
+     * @return True if able to connect. Otherwise, return false.
+     */
     public boolean connect() {
         try {
             this.sock = new Socket(this.host, this.port);

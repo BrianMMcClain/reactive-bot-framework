@@ -86,8 +86,8 @@ public class TwitchBot {
             this.isAuthenticated = true;
 
         } else if (message.startsWith("PING")) {
-            System.out.println("Responding to PING: . . . ");
-            sendMessage(message.replace("PING", "PONG"));
+            System.out.print("Responding to PING: . . . ");
+            this.connection.send(message.replace("PING", "PONG"));
             System.out.println("done!");
         } else {
             TwitchMessage tMessage = new TwitchMessage(message);

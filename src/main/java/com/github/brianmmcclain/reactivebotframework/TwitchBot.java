@@ -5,6 +5,12 @@ import java.util.Map;
 
 import com.github.brianmmcclain.reactivebotframework.commands.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import reactor.core.scheduler.Schedulers;
 
 public class TwitchBot {
@@ -14,6 +20,11 @@ public class TwitchBot {
     private String channel;
 
     private Map<String, BotCommand> commandRegistry;
+    
+    private Map<String, Counter> commandMetrics;
+    private Counter totalBotCommands_counter;
+
+    private MeterRegistry registry;
 
     /**
      * Connect using the default hostname and port
@@ -22,10 +33,18 @@ public class TwitchBot {
         this.connection = new IRCConnection("irc.chat.twitch.tv", 6667);
         this.connection.connect();
 
+        this.registry = new SimpleMeterRegistry();
+
         this.commandRegistry = new HashMap<String, BotCommand>();
+        this.commandMetrics = new HashMap<String, Counter>();
 
         // Enable metrics for schedulers
         Schedulers.enableMetrics();
+
+        // Build the counter to gather metreics
+        this.totalBotCommands_counter = Counter.builder("botcommand_total_counter")
+            .description("Total invocations of all bot commands")
+            .register(Metrics.globalRegistry);
     }
 
     /**
@@ -47,6 +66,12 @@ public class TwitchBot {
      */
     public void registerCommand(String command, BotCommand botCommand) {
         this.commandRegistry.put(command, botCommand);
+        
+        // Build the counter to gather metreics
+        Counter counter = Counter.builder("botcommand_" + command + "_counter")
+            .description("Invocation of the " + command + " command")
+            .register(Metrics.globalRegistry);
+        this.commandMetrics.put(command, counter);
     }
 
     /**
@@ -162,6 +187,11 @@ public class TwitchBot {
         if (this.commandRegistry.keySet().contains(command)) {
             BotCommand botCommand = this.commandRegistry.get(command);
             String retMessage = botCommand.execute(data, tMessage);
+
+            // Increment the counters
+            this.commandMetrics.get(command).increment();
+            this.totalBotCommands_counter.increment();
+
             this.sendMessage(retMessage);
         }
 

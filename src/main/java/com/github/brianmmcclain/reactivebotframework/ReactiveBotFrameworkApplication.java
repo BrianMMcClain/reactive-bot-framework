@@ -23,5 +23,6 @@ public class ReactiveBotFrameworkApplication {
 		bot.registerCommand("echo", new Echo());
 		bot.registerCommand("counter", new Counter());
 		bot.registerCommand("dice", new Dice());
+		bot.registerCommand("gamble", new Gamble());
 	}
 }

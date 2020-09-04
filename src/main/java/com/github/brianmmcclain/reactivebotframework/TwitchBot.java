@@ -48,17 +48,6 @@ public class TwitchBot {
     }
 
     /**
-     * Connect using a custom hostname and port
-     * 
-     * @param host Hostname of IRC server to connect to
-     * @param port Port of IRC server to connect to
-     */
-    public TwitchBot(String host, int port) {
-        this.connection = new IRCConnection(host, port);
-        this.connection.connect();
-    }
-
-    /**
      * Registers a new command for the bot to respond to
      * 
      * @param command Message prefix to scan for (ie. !command)
@@ -103,6 +92,8 @@ public class TwitchBot {
         this.connection.getInputStream().metrics().subscribeOn(Schedulers.parallel()).subscribe(message -> {
             processMessage(message);
         });
+
+        this.waitForAuthentication(10);
     }
 
     /**
@@ -112,6 +103,7 @@ public class TwitchBot {
     public void joinChannel(String channel) {
         this.connection.send("JOIN #" + channel);
         this.channel = channel;
+        System.out.println("Joined to #" + this.channel);
     }
 
     /**
@@ -157,18 +149,16 @@ public class TwitchBot {
     private void processMessage(String message) {
         if (message.contains("Welcome, GLHF!")) {
             this.isAuthenticated = true;
-
+            System.out.println("AUTHENTICATED TO SERVER");
         } else if (message.startsWith("PING")) {
             System.out.print("Responding to PING: . . . ");
             this.connection.send(message.replace("PING", "PONG"));
             System.out.println("done!");
         } else {
             TwitchMessage tMessage = new TwitchMessage(message);
+            System.out.println(tMessage.getSentBy() + ": " + tMessage.getMessage());
             if (tMessage.getMessage().startsWith("!")) {
                 processCommand(tMessage);
-            } else {
-                // Just a normal chat message
-                //System.out.println(tMessage.getSentBy() + ": " + tMessage.getMessage());
             }
         }
     }

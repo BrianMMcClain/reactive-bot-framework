@@ -48,7 +48,7 @@ public class IRCConnection {
         return this.sock.isConnected();
     }
 
-    public Flux<String> getInputStream() {
+    public Flux<String> getMessagesFlux() {
         return this.messages;
     }
 

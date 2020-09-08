@@ -89,7 +89,7 @@ public class TwitchBot {
         this.connection.send("NICK " + nick);
 
         // Subscribe to the Flux stream and process the messages as they come in
-        this.connection.getInputStream().metrics().subscribeOn(Schedulers.parallel()).subscribe(message -> {
+        this.connection.getMessagesFlux().metrics().subscribeOn(Schedulers.parallel()).subscribe(message -> {
             processMessage(message);
         });
 
@@ -148,13 +148,16 @@ public class TwitchBot {
      */
     private void processMessage(String message) {
         if (message.contains("Welcome, GLHF!")) {
+            // Authenticated to the server
             this.isAuthenticated = true;
             System.out.println("AUTHENTICATED TO SERVER");
         } else if (message.startsWith("PING")) {
+            // Periodic PING command
             System.out.print("Responding to PING: . . . ");
             this.connection.send(message.replace("PING", "PONG"));
             System.out.println("done!");
         } else {
+            // Not an internal command, see if it's a bot command
             TwitchMessage tMessage = new TwitchMessage(message);
             System.out.println(tMessage.getSentBy() + ": " + tMessage.getMessage());
             if (tMessage.getMessage().startsWith("!")) {

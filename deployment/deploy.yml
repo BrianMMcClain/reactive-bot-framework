@@ -34,6 +34,8 @@ spec:
             secretKeyRef:
               name: twitch-auth
               key: twitch-nick
+        - name: CODE_REPO_LINK
+          value: https://github.com/BrianMMcClain/reactive-bot-framework
 
 ---
 apiVersion: v1

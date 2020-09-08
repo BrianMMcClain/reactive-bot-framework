@@ -8,6 +8,6 @@ public abstract class BotCommand {
     }
 
     public String execute(String data, TwitchMessage tMessage) {
-        return "Method Not Implimented";
+        return "Method Not Implemented";
     }
 }

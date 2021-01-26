@@ -14,6 +14,7 @@ public class ReactiveBotFrameworkApplication {
 		String oauth = System.getenv("TWITCH_OAUTH");
 		String nick = System.getenv("TWITCH_NICK");
 		String channel = System.getenv("TWITCH_CHANNEL");
+		String code = System.getenv("CODE_REPO_LINK");
 
 		TwitchBot bot = new TwitchBot();
 		bot.authorize(oauth, nick);
@@ -23,5 +24,6 @@ public class ReactiveBotFrameworkApplication {
 		bot.registerCommand("echo", new Echo());
 		bot.registerCommand("counter", new Counter());
 		bot.registerCommand("dice", new Dice());
+		bot.registerCommand("code", new Code(code));
 	}
 }

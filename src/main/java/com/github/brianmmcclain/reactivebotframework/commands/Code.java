@@ -2,12 +2,16 @@ package com.github.brianmmcclain.reactivebotframework.commands;
 
 import com.github.brianmmcclain.reactivebotframework.TwitchMessage;
 
-public abstract class BotCommand {
+public class Code extends BotCommand {
+    private final String code;
 
-    public BotCommand() {
+    public Code(String code) {
+        super();
+        this.code = code;
     }
 
+    @Override
     public String execute(String data, TwitchMessage tMessage) {
-        return "Method Not Implemented";
+        return "@" + tMessage.getSentBy() + " " + code;
     }
 }

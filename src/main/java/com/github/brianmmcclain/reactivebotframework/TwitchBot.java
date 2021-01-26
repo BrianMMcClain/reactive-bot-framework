@@ -1,17 +1,14 @@
 package com.github.brianmmcclain.reactivebotframework;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import com.github.brianmmcclain.reactivebotframework.commands.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.github.brianmmcclain.reactivebotframework.commands.BotCommand;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Metrics;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import reactor.core.scheduler.Schedulers;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class TwitchBot {
 
@@ -35,13 +32,13 @@ public class TwitchBot {
 
         this.registry = new SimpleMeterRegistry();
 
-        this.commandRegistry = new HashMap<String, BotCommand>();
-        this.commandMetrics = new HashMap<String, Counter>();
+        this.commandRegistry = new HashMap<>();
+        this.commandMetrics = new HashMap<>();
 
         // Enable metrics for schedulers
         Schedulers.enableMetrics();
 
-        // Build the counter to gather metreics
+        // Build the counter to gather metrics
         this.totalBotCommands_counter = Counter.builder("botcommand_total_counter")
             .description("Total invocations of all bot commands")
             .register(Metrics.globalRegistry);
@@ -56,7 +53,7 @@ public class TwitchBot {
     public void registerCommand(String command, BotCommand botCommand) {
         this.commandRegistry.put(command, botCommand);
         
-        // Build the counter to gather metreics
+        // Build the counter to gather metrics
         Counter counter = Counter.builder("botcommand_" + command + "_counter")
             .description("Invocation of the " + command + " command")
             .register(Metrics.globalRegistry);
@@ -81,7 +78,7 @@ public class TwitchBot {
     /**
      * Authorize against the configured IRC server
      * 
-     * @param oauth OAuth token for the account to authoerize with
+     * @param oauth OAuth token for the account to authorize with
      * @param nick Username to authenticate with
      */
     public void authorize(String oauth, String nick) {
@@ -171,7 +168,7 @@ public class TwitchBot {
      * in the registered commands to ensure it's valid, and then
      * execute it
      * 
-     * @param tMessage The TwitchMessage obeject containing the command
+     * @param tMessage The TwitchMessage object containing the command
      */
     private void processCommand(TwitchMessage tMessage) {
         String command = tMessage.getMessage().split(" ")[0].replace("!", "");
